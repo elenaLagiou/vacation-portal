@@ -15,8 +15,12 @@
     "autoload": {
         "psr-4": {
             "Elagiou\\VacationPortal\\": "app/"
-        }
+        },
+         "files": [
+            "app/Helpers/View.php"
+        ]
     },
+    
     "authors": [
         {
             "name": "Eleni Konstantina Lagiou",

@@ -6,6 +6,8 @@ use Elagiou\VacationPortal\Services\AuthService;
 use Elagiou\VacationPortal\Services\UserService;
 use Elagiou\VacationPortal\DTO\LoginDTO;
 
+use function Elagiou\VacationPortal\Helpers\view;
+
 class ManagerController
 {
     private AuthService $authService;
@@ -23,7 +25,7 @@ class ManagerController
     public function showLoginForm(): void
     {
         $error = $_GET['error'] ?? null;
-        require __DIR__ . '/../../resources/views/login.php';
+        view('login', ['error' => $error]);
     }
 
     /**
@@ -36,12 +38,11 @@ class ManagerController
 
         if ($user && $user['role_id'] == 2) { // Manager role
             header('Location: /manager/home');
-            exit;
+            exit();
         }
 
-        // Redirect back with error
         header('Location: /login?error=Invalid credentials or not a manager');
-        exit;
+        exit();
     }
 
     /**
@@ -51,12 +52,16 @@ class ManagerController
     {
         if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
             header('Location: /login');
-            exit;
+            exit();
         }
 
         $currentUser = $this->authService->currentUser();
         $users = $this->userService->getAllUsers();
-        require __DIR__ . '/../../resources/views/manager/home.php';
+
+        view('manager.home', [
+            'currentUser' => $currentUser,
+            'users' => $users
+        ]);
     }
 
     /**
@@ -66,12 +71,12 @@ class ManagerController
     {
         if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
             header('Location: /login');
-            exit;
+            exit();
         }
 
         $this->userService->createUser($post);
         header('Location: /manager/home');
-        exit;
+        exit();
     }
 
     /**
@@ -81,6 +86,6 @@ class ManagerController
     {
         $this->authService->logout();
         header('Location: /login');
-        exit;
+        exit();
     }
 }

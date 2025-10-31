@@ -2,10 +2,14 @@
 
 namespace Elagiou\VacationPortal\DTO;
 
-use Spatie\DataTransferObject\DataTransferObject;
-
-class LoginDTO extends DataTransferObject
+class LoginDTO
 {
     public string $username;
     public string $password;
+
+    public function __construct(array $data)
+    {
+        $this->username = trim($data['username'] ?? '');
+        $this->password = trim($data['password'] ?? '');
+    }
 }

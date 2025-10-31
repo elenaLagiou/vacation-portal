@@ -6,70 +6,63 @@ use Elagiou\VacationPortal\Models\User;
 
 class UserRepository
 {
-    protected \PDO $pdo;
+    public function __construct(private \PDO $pdo) {}
 
-    public function __construct(\PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
-
-    /**
-     * Get all users from the database
-     *
-     * @return User[]
-     */
     public function getAll(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM users");
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        return array_map(fn($row) => new User($row), $results);
+        $rows = $stmt->fetchAll();
+        return array_map(fn($r) => new User($r), $rows);
     }
 
-    /**
-     * Get a single user by ID
-     */
-    public function getById(int $id): ?User
+    public function findById(int $id): ?User
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
         $stmt->execute(['id' => $id]);
-        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        return $data ? new User($data) : null;
+        $row = $stmt->fetch();
+        return $row ? new User($row) : null;
     }
 
-    /**
-     * Create a new user
-     */
     public function create(array $data): User
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO users (role_id, username, email, password, first_name, last_name)
-            VALUES (:role_id, :username, :email, :password, :first_name, :last_name)
+            INSERT INTO users (role_id, first_name, last_name, email, employee_code, password)
+            VALUES (:role_id, :first_name, :last_name, :email, :employee_code, :password)
         ");
-
         $stmt->execute([
-            'role_id' => $data['role_id'] ?? 3, // default employee
-            'username' => $data['username'],
+            'role_id' => $data['role_id'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
+            'employee_code' => $data['employee_code'],
             'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-            'first_name' => $data['first_name'] ?? '',
-            'last_name' => $data['last_name'] ?? '',
         ]);
-
         $data['id'] = (int)$this->pdo->lastInsertId();
         return new User($data);
     }
 
-    /**
-     * Find a user by username
-     */
-    public function getByUsername(string $username): ?User
+    public function update(array $data): bool
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
-        $stmt->execute(['username' => $username]);
-        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $fields = [
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+        ];
 
-        return $data ? new User($data) : null;
+        if (!empty($data['password'])) {
+            $fields['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
+        $fields['id'] = $data['id'];
+
+        $stmt = $this->pdo->prepare("UPDATE users SET $set WHERE id = :id");
+        return $stmt->execute($fields);
+    }
+
+    public function delete(int $id): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
     }
 }
