@@ -32,4 +32,16 @@ class AuthMiddleware
         }
         return true;
     }
+    public function employeeOnly(callable $next, ...$params)
+    {
+        $user = $this->authService->currentUser();
+
+        if (!$user || $user['role_id'] != 1) {
+            http_response_code(403);
+            echo '403 Forbidden - Employee access only';
+            exit;
+        }
+
+        return $next(...$params);
+    }
 }
