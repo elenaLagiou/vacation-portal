@@ -9,7 +9,8 @@
         "spatie/data-transfer-object": "^3.9",
         "respect/validation": "^2.4",
         "monolog/monolog": "^3.9",
-        "phpmailer/phpmailer": "^7.0"
+        "phpmailer/phpmailer": "^7.0",
+        "symfony/console": "^7.3"
     },
     "license": "MIT",
     "autoload": {

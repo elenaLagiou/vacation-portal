@@ -2,41 +2,32 @@
 
 namespace Elagiou\VacationPortal\Commands;
 
-class RunTablesCommand
+use PDO;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class RunTablesCommand extends Command
 {
-    private \PDO $pdo;
+    protected static $defaultName = 'migrate';
 
-    public function __construct(\PDO $pdo)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->pdo = $pdo;
-    }
+        require __DIR__ . '/../../config/bootstrap.php';
+        $pdo = $pdo ?? null;
 
-    public function handle(): void
-    {
-        echo "➡ Running database migrations...\n";
-        $this->runSqlFiles(__DIR__ . '/../../database/migrations');
-
-        echo "➡ Running seeders...\n";
-        $this->runSqlFiles(__DIR__ . '/../../database/seeders');
-
-        echo "✅ Migrations and seeders executed successfully.\n";
-    }
-
-    private function runSqlFiles(string $folder): void
-    {
-        $files = glob($folder . '/*.sql');
-        sort($files); // Ensure execution order
+        $migrationPath = __DIR__ . '/../../database/migrations';
+        $files = glob($migrationPath . '/*.sql');
 
         foreach ($files as $file) {
-            echo "Running: " . basename($file) . "...\n";
+            $output->writeln("Running: " . basename($file));
             $sql = file_get_contents($file);
-
-            try {
-                $this->pdo->exec($sql);
-            } catch (\PDOException $e) {
-                echo "❌ Error in file " . basename($file) . ": " . $e->getMessage() . "\n";
-                exit(1);
+            if (trim($sql)) {
+                $pdo->exec($sql);
             }
         }
+
+        $output->writeln('<info>Migrations completed successfully!</info>');
+        return Command::SUCCESS;
     }
 }
