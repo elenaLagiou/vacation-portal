@@ -5,6 +5,7 @@ namespace Elagiou\VacationPortal\Controllers;
 use Elagiou\VacationPortal\Services\AuthService;
 use Elagiou\VacationPortal\Services\UserService;
 use Elagiou\VacationPortal\DTO\LoginDTO;
+use Elagiou\VacationPortal\Services\VacationService;
 
 use function Elagiou\VacationPortal\Helpers\view;
 
@@ -12,6 +13,7 @@ class ManagerController
 {
     private AuthService $authService;
     private UserService $userService;
+    private VacationService $vacationService;
 
     public function __construct(AuthService $authService, UserService $userService)
     {
@@ -87,5 +89,33 @@ class ManagerController
         $this->authService->logout();
         header('Location: /login');
         exit();
+    }
+    /**
+     * List all vacation requests
+     */
+    public function listRequests(): void
+    {
+        $requests = $this->vacationService->getAllVacationRequests();
+        require __DIR__ . '/../../resources/views/manager/requests.php';
+    }
+
+    /**
+     * Approve a vacation request
+     */
+    public function approveRequest(int $id): void
+    {
+        $this->vacationService->updateStatus($id, 'approved');
+        header('Location: /manager/requests');
+        exit;
+    }
+
+    /**
+     * Reject a vacation request
+     */
+    public function rejectRequest(int $id): void
+    {
+        $this->vacationService->updateStatus($id, 'rejected');
+        header('Location: /manager/requests');
+        exit;
     }
 }

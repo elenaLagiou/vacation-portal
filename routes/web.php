@@ -65,6 +65,36 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
                 $authMiddleware->managerOnly(...)
             ])
         );
+        // Vacation request management
+        $r->addRoute(
+            'GET',
+            '/requests',
+            fn() =>
+            Middleware::handle([$managerController, 'listRequests'], [
+                $authMiddleware->handle(...),
+                $authMiddleware->managerOnly(...)
+            ])
+        );
+
+        $r->addRoute(
+            'POST',
+            '/request/approve/{id}',
+            fn($id) =>
+            Middleware::handle([$managerController, 'approveRequest'], [
+                $authMiddleware->handle(...),
+                $authMiddleware->managerOnly(...)
+            ], [$id])
+        );
+
+        $r->addRoute(
+            'POST',
+            '/request/reject/{id}',
+            fn($id) =>
+            Middleware::handle([$managerController, 'rejectRequest'], [
+                $authMiddleware->handle(...),
+                $authMiddleware->managerOnly(...)
+            ], [$id])
+        );
     });
 
     // ---------------------------

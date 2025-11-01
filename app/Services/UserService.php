@@ -47,6 +47,6 @@ class UserService
      */
     public function getUserById(int $id)
     {
-        return $this->userRepo->getById($id);
+        return $this->userRepo->findById($id);
     }
 }
