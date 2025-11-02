@@ -7,7 +7,7 @@ $errors = SessionFlash::get('errors', []);
 $success = SessionFlash::get('success');
 
 // $requests: array of VacationRequestDTO
-// $statuses: array of strings ['pending', 'approved', 'rejected']
+// $statuses: array of strings or objects representing all possible statuses
 ?>
 
 <!DOCTYPE html>
@@ -46,43 +46,41 @@ $success = SessionFlash::get('success');
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($requests as $request): ?>
+                <?php if (!empty($requests)): ?>
+                    <?php foreach ($requests as $request): ?>
+                        <tr>
+                            <td><?= $request->id ?></td>
+                            <td><?= htmlspecialchars($request->first_name . ' ' . $request->last_name) ?></td>
+                            <td><?= htmlspecialchars($request->reason) ?></td>
+                            <td><?= htmlspecialchars($request->start_date) ?></td>
+                            <td><?= htmlspecialchars($request->end_date) ?></td>
+                            <td>
+                                <form method="POST" action="/request/update-status">
+                                    <input type="hidden" name="id" value="<?= $request->id ?>">
+                                    <select name="status_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        <?php foreach ($statuses as $statusKey => $statusValue): ?>
+                                            <option value="<?= $statusKey ?>" <?= $request->status_id == $statusKey ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($statusValue) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="d-flex gap-1">
+                                <form method="POST" action="/request/delete/<?= $request->id ?>" class="d-inline"
+                                    onsubmit="return confirm('Are you sure you want to delete this request?')">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                        <td><?= $request->id ?></td>
-                        <td><?= htmlspecialchars($request->first_name . ' ' . $request->last_name) ?></td>
-                        <td><?= htmlspecialchars($request->reason) ?></td>
-                        <td><?= htmlspecialchars($request->start_date) ?></td>
-                        <td><?= htmlspecialchars($request->end_date) ?></td>
-                        <td>
-                            <form method="POST" action="/manager/update-request" class="d-inline">
-                                <input type="hidden" name="id" value="<?= $request->id ?>">
-                                <select name="status_name" class="form-select form-select-sm" onchange="this.form.submit()">
-                                    <?php foreach ($statuses as $status): ?>
-                                        <option value="<?= htmlspecialchars($status) ?>"
-                                            <?= $request->status_name === $status ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($status) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST" action="/manager/delete-request" class="d-inline">
-                                <input type="hidden" name="id" value="<?= $request->id ?>">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                <?php if (empty($requests)): ?>
-                    <tr>
-                        <td colspan="7" class="text-center">No requests found.</td>
+                        <td colspan="7" class="text-center">No vacation requests found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

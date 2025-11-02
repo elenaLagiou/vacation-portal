@@ -52,13 +52,9 @@ class VacationService
     /**
      * Update vacation status (approve / reject)
      */
-    public function updateStatus(int $id, string $status): bool
+    public function updateStatus(int $id, int $status_id): bool
     {
-        if (!in_array($status, ['approved', 'rejected', 'pending'])) {
-            throw new \InvalidArgumentException("Invalid status value");
-        }
-
-        return $this->vacationRepository->updateStatus($id, $status);
+        return $this->vacationRepository->updateStatus($id, $status_id);
     }
 
     /**

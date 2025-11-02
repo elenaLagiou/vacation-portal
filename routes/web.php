@@ -112,9 +112,7 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
         );
     });
 
-    // ---------------------------
-    // 👷 EMPLOYEE ROUTES
-    // ---------------------------
+    // EMPLOYEE ROUTES
     $r->addGroup('/employee', function (RouteCollector $r) use ($employeeController, $authMiddleware) {
 
         // Employee dashboard

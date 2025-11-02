@@ -81,12 +81,12 @@ class VacationRepository
     /**
      * Update vacation request status
      */
-    public function updateStatus(int $id, string $status): bool
+    public function updateStatus(int $id, int $status_id): bool
     {
-        $stmt = $this->pdo->prepare("UPDATE vacations SET status = :status WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE vacation_requests SET status_id = :status_id WHERE id = :id");
         return $stmt->execute([
             'id'     => $id,
-            'status' => $status
+            'status_id' => $status_id
         ]);
     }
 
