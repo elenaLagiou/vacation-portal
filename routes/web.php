@@ -25,7 +25,7 @@ $userService     = new UserService($userRepo);
 $vacationService = new VacationService($vacationRepo);
 
 // Controllers
-$managerController  = new ManagerController($authService, $userService);
+$managerController  = new ManagerController($authService, $userService, $vacationService);
 $employeeController = new EmployeeController($authService, $vacationService);
 
 // Middleware
@@ -34,16 +34,12 @@ $authMiddleware = new AuthMiddleware($authService);
 // Dispatcher
 return simpleDispatcher(function (RouteCollector $r) use ($managerController, $employeeController, $authMiddleware) {
 
-    // ---------------------------
-    // 🔐 AUTH ROUTES
-    // ---------------------------
+    //  AUTH ROUTES
     $r->addRoute('GET', '/login', [$managerController, 'showLoginForm']);
     $r->addRoute('POST', '/login', fn() => $managerController->login($_POST));
     $r->addRoute('GET', '/logout', [$managerController, 'logout']);
 
-    // ---------------------------
-    // 👨‍💼 MANAGER ROUTES
-    // ---------------------------
+    // MANAGER ROUTES
     $r->addGroup('/manager', function (RouteCollector $r) use ($managerController, $authMiddleware) {
 
         $r->addRoute(
@@ -77,6 +73,12 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
                 ]
             )
         );
+        $r->addRoute('GET', '/manager/update-user', fn() =>
+        Middleware::handle([$managerController, 'showUpdateUserForm'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
+        $r->addRoute('POST', '/manager/update-user', fn() =>
+        Middleware::handle([$managerController, 'updateUser'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
+        $r->addRoute('POST', '/manager/delete-user', fn() =>
+        Middleware::handle([$managerController, 'deleteUser'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
 
         // Vacation request management
         $r->addRoute(

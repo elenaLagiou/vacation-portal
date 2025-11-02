@@ -14,15 +14,12 @@ use function Elagiou\VacationPortal\Helpers\view;
 
 class ManagerController
 {
-    private AuthService $authService;
-    private UserService $userService;
-    private VacationService $vacationService;
 
-    public function __construct(AuthService $authService, UserService $userService)
-    {
-        $this->authService = $authService;
-        $this->userService = $userService;
-    }
+    public function __construct(
+        protected AuthService $authService,
+        protected UserService $userService,
+        protected VacationService $vacationService
+    ) {}
 
     /**
      * Show login page
@@ -102,6 +99,51 @@ class ManagerController
             exit();
         }
     }
+    public function showUpdateUserForm(): void
+    {
+        $id = (int)($_GET['id'] ?? 0);
+
+        if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
+            header('Location: /login');
+            exit();
+        }
+
+        $user = $this->userService->getUserById($id);
+        if (!$user) {
+            SessionFlash::set('error', ['User not found.']);
+            header('Location: /manager/home');
+            exit();
+        }
+
+        view('manager.update_user', ['user' => $user]);
+    }
+
+    public function updateUser(array $data): void
+    {
+        try {
+            $this->userService->updateUser($data);
+            SessionFlash::set('success', 'User updated successfully!');
+            header('Location: /manager/home');
+            exit();
+        } catch (\Throwable $e) {
+            SessionFlash::set('errors', ['Failed to update user: ' . $e->getMessage()]);
+            header('Location: /manager/update-user?id=' . $data['id']);
+            exit();
+        }
+    }
+
+    public function deleteUser(array $data): void
+    {
+        try {
+            $this->userService->deleteUser((int)$data['id']);
+            SessionFlash::set('success', 'User deleted successfully!');
+        } catch (\Throwable $e) {
+            SessionFlash::set('errors', ['Failed to delete user: ' . $e->getMessage()]);
+        }
+
+        header('Location: /manager/home');
+        exit();
+    }
 
     /**
      * Logout
@@ -118,8 +160,14 @@ class ManagerController
     public function listRequests(): void
     {
         $requests = $this->vacationService->getAllVacationRequests();
-        require __DIR__ . '/../../resources/views/manager/requests.php';
+        $statuses = $this->vacationService->getAllStatuses(); // fetch from DB
+
+        view('manager.requests', [
+            'requests' => $requests,
+            'statuses' => $statuses
+        ]);
     }
+
 
     /**
      * Approve a vacation request

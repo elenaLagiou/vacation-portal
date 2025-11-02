@@ -1,3 +1,24 @@
+<?php
+
+use Elagiou\VacationPortal\Helpers\SessionFlash;
+
+$errors = SessionFlash::get('errors', []);
+$success = SessionFlash::get('success');
+?>
+
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            <?php foreach ($errors as $err): ?>
+                <li><?= htmlspecialchars($err) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php elseif ($success): ?>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+<?php endif; ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,6 +53,7 @@
                     <th>Email</th>
                     <th>Full Name</th>
                     <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,18 +64,23 @@
                         <td><?= htmlspecialchars($user->email) ?></td>
                         <td><?= htmlspecialchars($user->first_name . ' ' . $user->last_name) ?></td>
                         <td><?= $user->role_id == 2 ? 'Manager' : 'Employee' ?></td>
+                        <td>
+                            <a href="/manager/update-user?id=<?= $user->id ?>" class="btn btn-sm btn-warning">Update</a>
+                            <form method="POST" action="/manager/delete-user" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <input type="hidden" name="id" value="<?= $user->id ?>">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
         <hr>
-
         <div class="mt-4">
             <a href="/manager/create-user" class="btn btn-success">➕ Create New User</a>
         </div>
     </div>
-
 </body>
 
 </html>

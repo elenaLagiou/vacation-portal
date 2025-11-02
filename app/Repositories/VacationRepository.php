@@ -2,6 +2,8 @@
 
 namespace Elagiou\VacationPortal\Repositories;
 
+use Elagiou\VacationPortal\DTO\VacationRequestDTO;
+
 class VacationRepository
 {
     private \PDO $pdo;
@@ -16,9 +18,32 @@ class VacationRepository
      */
     public function getAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM vacations ORDER BY created_at DESC");
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $sql = "
+        SELECT 
+            vr.id,
+            vr.user_id,
+            vr.start_date,
+            vr.end_date,
+            vr.reason,
+            vs.name AS status, 
+            vr.created_at,
+            vr.updated_at,
+            u.first_name,
+            u.last_name,
+            u.email
+        FROM vacation_requests vr
+        LEFT JOIN vacation_status vs ON vr.status_id = vs.id
+        LEFT JOIN users u ON vr.user_id = u.id
+        ORDER BY vr.created_at DESC
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return array_map(fn($row) => new VacationRequestDTO($row), $rows);
     }
+
 
     /**
      * Get vacation requests for a specific user
@@ -72,5 +97,10 @@ class VacationRepository
     {
         $stmt = $this->pdo->prepare("DELETE FROM vacations WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+    public function getAllStatuses(): array
+    {
+        $stmt = $this->pdo->query("SELECT name FROM vacation_status ORDER BY id ASC");
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN);
     }
 }

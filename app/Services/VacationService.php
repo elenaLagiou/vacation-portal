@@ -73,4 +73,8 @@ class VacationService
 
         return $this->vacationRepository->delete($id);
     }
+    public function getAllStatuses(): array
+    {
+        return $this->vacationRepository->getAllStatuses();
+    }
 }
