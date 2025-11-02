@@ -161,8 +161,7 @@ class ManagerController
     {
         $requests = $this->vacationService->getAllVacationRequests();
         $statuses = $this->vacationService->getAllStatuses();
-        var_dump($statuses);
-
+        
         view('manager.requests', [
             'requests' => $requests,
             'statuses' => $statuses
