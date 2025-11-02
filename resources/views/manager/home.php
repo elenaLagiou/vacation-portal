@@ -49,40 +49,9 @@
 
         <hr>
 
-        <h3>Create New User</h3>
-        <form method="POST" action="/manager/create-user" class="row g-3 mt-2">
-            <div class="col-md-2">
-                <label for="role_id" class="form-label">Role</label>
-                <select name="role_id" id="role_id" class="form-select" required>
-                    <option value="1">Employee</option>
-                    <option value="2">Manager</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" id="username" required>
-            </div>
-            <div class="col-md-2">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="email" required>
-            </div>
-            <div class="col-md-2">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="password" required>
-            </div>
-            <div class="col-md-2">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" name="first_name" class="form-control" id="first_name" required>
-            </div>
-            <div class="col-md-2">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" name="last_name" class="form-control" id="last_name" required>
-            </div>
-
-            <div class="col-12 mt-2">
-                <button type="submit" class="btn btn-success">Create User</button>
-            </div>
-        </form>
+        <div class="mt-4">
+            <a href="/manager/create-user" class="btn btn-success">➕ Create New User</a>
+        </div>
     </div>
 
 </body>

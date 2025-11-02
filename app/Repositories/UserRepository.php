@@ -2,6 +2,7 @@
 
 namespace Elagiou\VacationPortal\Repositories;
 
+use Elagiou\VacationPortal\DTO\UserCreationDTO;
 use Elagiou\VacationPortal\Models\User;
 
 class UserRepository
@@ -23,23 +24,47 @@ class UserRepository
         return $row ? new User($row) : null;
     }
 
-    public function create(array $data): User
+    public function create(UserCreationDTO $data): User
     {
+        // 1️⃣ Insert into users table
         $stmt = $this->pdo->prepare("
-            INSERT INTO users (role_id, first_name, last_name, email, employee_code, password)
-            VALUES (:role_id, :first_name, :last_name, :email, :employee_code, :password)
-        ");
+        INSERT INTO users (role_id, username,first_name, last_name, email, password)
+        VALUES (:role_id,:username, :first_name, :last_name, :email, :password)
+    ");
+
         $stmt->execute([
-            'role_id' => $data['role_id'],
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'employee_code' => $data['employee_code'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+            'role_id' => $data->role_id,
+            'username' => $data->username,
+            'first_name' => $data->first_name,
+            'last_name' => $data->last_name,
+            'email' => $data->email,
+            'password' => password_hash($data->password, PASSWORD_DEFAULT),
         ]);
-        $data['id'] = (int)$this->pdo->lastInsertId();
-        return new User($data);
+
+        $userId = (int) $this->pdo->lastInsertId();
+
+        if (!empty($data->details)) {
+            $stmtDetails = $this->pdo->prepare("
+            INSERT INTO user_details (user_id, details)
+            VALUES (:user_id, :details)
+        ");
+            $stmtDetails->execute([
+                'user_id' => $userId,
+                'details' => json_encode($data->details),
+            ]);
+        }
+
+        return new User([
+            'id' => $userId,
+            'role_id' => $data->role_id,
+            'username' => $data->username,
+            'first_name' => $data->first_name,
+            'last_name' => $data->last_name,
+            'email' => $data->email
+        ]);
     }
+
+
 
     public function update(array $data): bool
     {

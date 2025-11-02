@@ -2,32 +2,63 @@
 
 namespace Elagiou\VacationPortal\Commands;
 
-use PDO;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use PDO;
 
 class RunTablesCommand extends Command
 {
-    protected static $defaultName = 'migrate';
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    protected static $defaultName = 'db:migrate';
+
+    protected function configure(): void
+    {
+        $this
+            ->setDescription('Run all SQL migration and seeder files.')
+            ->setHelp('Executes all .sql files from database/migrations and database/seeders.');
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        require __DIR__ . '/../../config/bootstrap.php';
-        $pdo = $pdo ?? null;
+        $output->writeln("<info>🚀 Running database migrations...</info>");
 
-        $migrationPath = __DIR__ . '/../../database/migrations';
-        $files = glob($migrationPath . '/*.sql');
+        // load PDO connection
+        $pdo = require __DIR__ . '/../../config/bootstrap.php';
 
-        foreach ($files as $file) {
-            $output->writeln("Running: " . basename($file));
-            $sql = file_get_contents($file);
-            if (trim($sql)) {
-                $pdo->exec($sql);
-            }
+        // paths
+        $migrationsPath = __DIR__ . '/../../database/migrations';
+        $seedersPath = __DIR__ . '/../../database/seeders';
+
+        $this->runSqlFiles($pdo, $migrationsPath, $output, 'Migration');
+        $this->runSqlFiles($pdo, $seedersPath, $output, 'Seeder');
+
+        $output->writeln("<info>✅ All migrations and seeders completed successfully!</info>");
+        return Command::SUCCESS;
+    }
+
+    private function runSqlFiles(PDO $pdo, string $path, OutputInterface $output, string $type): void
+    {
+        if (!is_dir($path)) {
+            $output->writeln("<comment>⚠️ Directory not found: {$path}</comment>");
+            return;
         }
 
-        $output->writeln('<info>Migrations completed successfully!</info>');
-        return Command::SUCCESS;
+        foreach (glob($path . '/*.sql') as $file) {
+            $output->writeln("➡️ Running {$type}: " . basename($file));
+            $sql = trim(file_get_contents($file));
+
+            if (!empty($sql)) {
+                try {
+                    $pdo->exec($sql);
+                } catch (\PDOException $e) {
+                    $output->writeln("<error>❌ Error running {$file}: {$e->getMessage()}</error>");
+                }
+            }
+        }
     }
 }

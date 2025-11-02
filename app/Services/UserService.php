@@ -2,6 +2,8 @@
 
 namespace Elagiou\VacationPortal\Services;
 
+use Elagiou\VacationPortal\DTO\UserCreationDTO;
+use Elagiou\VacationPortal\Models\User;
 use Elagiou\VacationPortal\Repositories\UserRepository;
 
 class UserService
@@ -26,18 +28,18 @@ class UserService
     /**
      * Create a new user
      *
-     * @param array $data
+     * @param UserCreationDTO $data
      * @return void
      */
-    public function createUser(array $data): void
+    public function createUser(UserCreationDTO $data): void
     {
         // Ensure password is hashed
-        if (isset($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        if (isset($data->password)) {
+            $data->password = password_hash($data->password, PASSWORD_DEFAULT);
         }
 
         // Default role_id to 3 (employee) if not set
-        $data['role_id'] = $data['role_id'] ?? 3;
+        $data->role_id = $data->role_id ?? 3;
 
         $this->userRepo->create($data);
     }

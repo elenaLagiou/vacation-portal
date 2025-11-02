@@ -5,7 +5,10 @@ namespace Elagiou\VacationPortal\Controllers;
 use Elagiou\VacationPortal\Services\AuthService;
 use Elagiou\VacationPortal\Services\UserService;
 use Elagiou\VacationPortal\DTO\LoginDTO;
+use Elagiou\VacationPortal\DTO\UserCreationDTO;
+use Elagiou\VacationPortal\Helpers\SessionFlash;
 use Elagiou\VacationPortal\Services\VacationService;
+use Respect\Validation\Exceptions\ValidationException;
 
 use function Elagiou\VacationPortal\Helpers\view;
 
@@ -30,12 +33,23 @@ class ManagerController
         view('login', ['error' => $error]);
     }
 
+    public function showCreateUserForm(): void
+    {
+        if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
+            header('Location: /login');
+            exit();
+        }
+
+        view('manager.create_user');
+    }
+
+
     /**
      * Handle login form submission
      */
-    public function login(array $post): void
+    public function login(array $data): void
     {
-        $dto = new LoginDTO($post);
+        $dto = new LoginDTO($data);
         $user = $this->authService->login($dto);
 
         if ($user && $user['role_id'] == 2) { // Manager role
@@ -69,16 +83,24 @@ class ManagerController
     /**
      * Create a new user
      */
-    public function createUser(array $post): void
+    public function createUser(array $data): void
     {
-        if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
-            header('Location: /login');
+        try {
+            $dto = new UserCreationDTO($data);
+            $this->userService->createUser($dto);
+
+            SessionFlash::set('success', 'User created successfully!');
+            header('Location: /manager/home');
+            exit();
+        } catch (ValidationException $ve) {
+            SessionFlash::set('errors', $ve->getMessage());
+            header('Location: /manager/create-user');
+            exit();
+        } catch (\Throwable $e) {
+            SessionFlash::set('error', 'Failed to create user: ' . $e->getMessage());
+            header('Location: /manager/create-user');
             exit();
         }
-
-        $this->userService->createUser($post);
-        header('Location: /manager/home');
-        exit();
     }
 
     /**

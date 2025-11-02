@@ -55,16 +55,29 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
                 $authMiddleware->managerOnly(...)
             ])
         );
+        $r->addRoute(
+            'GET',
+            '/create-user',
+            fn() =>
+            Middleware::handle([$managerController, 'showCreateUserForm'], [
+                $authMiddleware->handle(...),
+                $authMiddleware->managerOnly(...)
+            ])
+        );
 
         $r->addRoute(
             'POST',
             '/create-user',
             fn() =>
-            Middleware::handle([$managerController, 'createUser'], [
-                $authMiddleware->handle(...),
-                $authMiddleware->managerOnly(...)
-            ])
+            Middleware::handle(
+                fn() => $managerController->createUser($_POST), // ✅ pass $_POST here
+                [
+                    $authMiddleware->handle(...),
+                    $authMiddleware->managerOnly(...)
+                ]
+            )
         );
+
         // Vacation request management
         $r->addRoute(
             'GET',

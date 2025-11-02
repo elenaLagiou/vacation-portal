@@ -23,11 +23,9 @@ class AuthService
     public function login(LoginDTO $dto): ?array
     {
         $user = $this->repository->getByUsername($dto->username);
-
         if (!$user) return null;
 
         if (password_verify($dto->password, $user->password)) {
-            // Start session if not already started
             if (session_status() === PHP_SESSION_NONE) session_start();
 
             $_SESSION['user'] = [
