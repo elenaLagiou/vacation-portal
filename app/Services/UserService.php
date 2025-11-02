@@ -33,6 +33,9 @@ class UserService
      */
     public function createUser(UserCreationDTO $data): void
     {
+        if (!isset($data->role_id)) {
+            throw new \InvalidArgumentException("Role ID must be provided.");
+        }
         // Ensure password is hashed
         if (isset($data->password)) {
             $data->password = password_hash($data->password, PASSWORD_DEFAULT);

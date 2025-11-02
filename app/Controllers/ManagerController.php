@@ -93,11 +93,11 @@ class ManagerController
             header('Location: /manager/home');
             exit();
         } catch (ValidationException $ve) {
-            SessionFlash::set('errors', $ve->getMessage());
+            SessionFlash::set('errors', [$ve->getMessage()]);
             header('Location: /manager/create-user');
             exit();
         } catch (\Throwable $e) {
-            SessionFlash::set('error', 'Failed to create user: ' . $e->getMessage());
+            SessionFlash::set('error', ['Failed to create user: ' . $e->getMessage()]);
             header('Location: /manager/create-user');
             exit();
         }
