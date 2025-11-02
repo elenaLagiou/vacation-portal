@@ -2,9 +2,12 @@
 
 use Elagiou\VacationPortal\Helpers\SessionFlash;
 
+// Flash messages
 $errors = SessionFlash::get('errors', []);
 $success = SessionFlash::get('success');
 
+// $requests: array of VacationRequestDTO
+// $statuses: array of strings ['pending', 'approved', 'rejected']
 ?>
 
 <!DOCTYPE html>
@@ -47,37 +50,37 @@ $success = SessionFlash::get('success');
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($requests)): ?>
-                    <?php foreach ($requests as $request): ?>
-                        <tr>
-                            <td><?= $request->id ?></td>
-                            <td><?= htmlspecialchars($request->first_name . ' ' . $request->last_name) ?></td>
-                            <td><?= htmlspecialchars($request->reason) ?></td>
-                            <td><?= htmlspecialchars($request->start_date) ?></td>
-                            <td><?= htmlspecialchars($request->end_date) ?></td>
-                            <td>
-                                <form method="POST" action="/manager/update-request" class="d-inline">
-                                    <input type="hidden" name="id" value="<?= $request->id ?>">
-                                    <select name="status_id" class="form-select form-select-sm" onchange="this.form.submit()">
-                                        <?php foreach ($statuses as $status): ?>
-                                            <option value="<?= $status->id ?>" <?= $request->status_id === $status->id ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($status->status_name) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </form>
-                            </td>
-                            <td>
-                                <form method="POST" action="/manager/delete-request" class="d-inline">
-                                    <input type="hidden" name="id" value="<?= $request->id ?>">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+                <?php foreach ($requests as $request): ?>
+                    <tr>
+                        <td><?= $request->id ?></td>
+                        <td><?= htmlspecialchars($request->first_name . ' ' . $request->last_name) ?></td>
+                        <td><?= htmlspecialchars($request->reason) ?></td>
+                        <td><?= htmlspecialchars($request->start_date) ?></td>
+                        <td><?= htmlspecialchars($request->end_date) ?></td>
+                        <td>
+                            <form method="POST" action="/manager/update-request" class="d-inline">
+                                <input type="hidden" name="id" value="<?= $request->id ?>">
+                                <select name="status_name" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <?php foreach ($statuses as $status): ?>
+                                        <option value="<?= htmlspecialchars($status) ?>"
+                                            <?= $request->status_name === $status ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($status) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="/manager/delete-request" class="d-inline">
+                                <input type="hidden" name="id" value="<?= $request->id ?>">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php if (empty($requests)): ?>
                     <tr>
                         <td colspan="7" class="text-center">No requests found.</td>
                     </tr>

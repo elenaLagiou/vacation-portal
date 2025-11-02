@@ -160,7 +160,8 @@ class ManagerController
     public function listRequests(): void
     {
         $requests = $this->vacationService->getAllVacationRequests();
-        $statuses = $this->vacationService->getAllStatuses(); // fetch from DB
+        $statuses = $this->vacationService->getAllStatuses();
+        var_dump($statuses);
 
         view('manager.requests', [
             'requests' => $requests,
