@@ -21,15 +21,6 @@ class ManagerController
         protected VacationService $vacationService
     ) {}
 
-    /**
-     * Show login page
-     */
-    public function showLoginForm(): void
-    {
-        $error = $_GET['error'] ?? null;
-        view('login', ['error' => $error]);
-    }
-
     public function showCreateUserForm(): void
     {
         if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
@@ -37,7 +28,11 @@ class ManagerController
             exit();
         }
 
-        view('manager.create_user');
+        $user = $this->authService->currentUser();
+
+        view('manager.create_user', [
+            'user' => $user,
+        ]);
     }
 
     /**
