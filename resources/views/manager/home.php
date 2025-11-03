@@ -50,14 +50,17 @@ $success = SessionFlash::get('success');
         <!-- Header / Action Buttons -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>Registered Users</h3>
-            <a href="/manager/create-user" class="btn btn-success">➕ Create New User</a>
+            <div class="btn-group">
+                <a href="/manager/requests" class="btn btn-info text-white">📋 View Vacation Requests</a>
+                <a href="/manager/create-user" class="btn btn-success">➕ Create New User</a>
+            </div>
         </div>
 
         <!-- Users Table -->
         <div class="card">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0">
+                    <table class="table table-striped table-hover mb-0 table-lg">
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
@@ -98,6 +101,10 @@ $success = SessionFlash::get('success');
         </div>
 
     </div> <!-- /.container -->
+
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <small>&copy; <?= date('Y') ?> Vacation Portal. All rights reserved.</small>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

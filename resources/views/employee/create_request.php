@@ -16,7 +16,7 @@
             <a class="navbar-brand" href="#">Vacation Portal</a>
             <div class="d-flex">
                 <span class="navbar-text me-3">
-                    <?= htmlspecialchars($user['first_name']) ?>
+                    <?= htmlspecialchars($user->first_name) ?>
                 </span>
                 <a class="btn btn-outline-light" href="/logout">Logout</a>
             </div>

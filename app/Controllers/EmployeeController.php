@@ -47,7 +47,11 @@ class EmployeeController
             exit;
         }
 
-        view('employee/create_request');
+        $user = (object) $this->authService->currentUser();
+
+        view('employee/create_request', [
+            'user' => $user
+        ]);
     }
 
     /**

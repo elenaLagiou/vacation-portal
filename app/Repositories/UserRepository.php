@@ -69,36 +69,40 @@ class UserRepository
     public function update(array $data): bool
     {
         $fields = [
-            'username' => $data['username'] ?? null,
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
+            'username'   => $data['username'] ?? null,
+            'first_name' => $data['first_name'] ?? null,
+            'last_name'  => $data['last_name'] ?? null,
+            'email'      => $data['email'] ?? null,
         ];
 
         if (!empty($data['password'])) {
             $fields['password'] = $data['password']; // already hashed
         }
 
+        $fields = array_filter($fields, fn($v) => $v !== null && $v !== '');
+
         $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
+
         $fields['id'] = $data['id'];
 
         $stmt = $this->pdo->prepare("UPDATE users SET $set WHERE id = :id");
         $updated = $stmt->execute($fields);
 
-        // Update user_details JSON if provided
         if (isset($data['details']) && is_array($data['details'])) {
             $stmt2 = $this->pdo->prepare("
-                INSERT INTO user_details (user_id, details) VALUES (:user_id, :details)
-                ON DUPLICATE KEY UPDATE details = :details
-            ");
+            INSERT INTO user_details (user_id, details)
+            VALUES (:user_id, :details)
+            ON DUPLICATE KEY UPDATE details = :details
+        ");
             $stmt2->execute([
                 'user_id' => $data['id'],
-                'details' => json_encode($data['details'])
+                'details' => json_encode($data['details']),
             ]);
         }
 
         return $updated;
     }
+
 
     public function delete(int $id): bool
     {

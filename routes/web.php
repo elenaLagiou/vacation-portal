@@ -76,12 +76,34 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
                 ]
             )
         );
-        $r->addRoute('GET', '/update-user', fn() =>
-        Middleware::handle([$managerController, 'showUpdateUserForm'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
-        $r->addRoute('POST', '/update-user', fn() =>
-        Middleware::handle([$managerController, 'updateUser'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
-        $r->addRoute('POST', '/delete-user', fn() =>
-        Middleware::handle([$managerController, 'deleteUser'], [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]));
+        $r->addRoute(
+            'GET',
+            '/update-user',
+            fn() =>
+            Middleware::handle(
+                [$managerController, 'showUpdateUserForm'],
+                [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]
+            )
+        );
+        $r->addRoute(
+            'POST',
+            '/update-user',
+            fn() =>
+            Middleware::handle(
+                fn() => $managerController->updateUser($_POST),
+                [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]
+            )
+        );
+
+        $r->addRoute(
+            'POST',
+            '/delete-user',
+            fn() =>
+            Middleware::handle(
+                [$managerController, 'deleteUser'],
+                [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]
+            )
+        );
 
         // Vacation request management
         $r->addRoute(

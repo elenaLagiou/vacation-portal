@@ -6,19 +6,6 @@ $errors = SessionFlash::get('errors', []);
 $success = SessionFlash::get('success');
 ?>
 
-<?php if (!empty($errors)): ?>
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            <?php foreach ($errors as $err): ?>
-                <li><?= htmlspecialchars($err) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php elseif ($success): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-<?php endif; ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,61 +13,115 @@ $success = SessionFlash::get('success');
     <meta charset="UTF-8">
     <title>Update User - Manager Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/manager/home">Vacation Portal</a>
+            <div class="d-flex">
+                <span class="navbar-text me-3">
+                    <?= htmlspecialchars($user->first_name . ' ' . $user->last_name) ?>
+                </span>
+                <a class="btn btn-outline-light" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-5">
-        <h2>Update User</h2>
-        <hr>
 
-        <form method="POST" action="/manager/update-user" class="row g-3 mt-2">
-            <input type="hidden" name="id" value="<?= $user->id ?>">
+        <!-- Flash Messages -->
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger shadow-sm rounded">
+                <ul class="mb-0">
+                    <?php foreach ($errors as $err): ?>
+                        <li><?= htmlspecialchars($err) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php elseif ($success): ?>
+            <div class="alert alert-success shadow-sm rounded">
+                <?= htmlspecialchars($success) ?>
+            </div>
+        <?php endif; ?>
 
-            <div class="col-md-3">
-                <label for="role_id" class="form-label">Role</label>
-                <select name="role_id" id="role_id" class="form-select" required>
-                    <option value="1" <?= $user->role_id == 1 ? 'selected' : '' ?>>Employee</option>
-                    <option value="2" <?= $user->role_id == 2 ? 'selected' : '' ?>>Manager</option>
-                </select>
+        <!-- Card Wrapper -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 text-primary fw-semibold">Update User</h4>
             </div>
 
-            <div class="col-md-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" id="username" value="<?= htmlspecialchars($user->username) ?>" required>
-            </div>
+            <div class="card-body bg-white p-4">
+                <form method="POST" action="/manager/update-user" class="row g-3">
+                    <input type="hidden" name="id" value="<?= $user->id ?>">
 
-            <div class="col-md-3" id="employee_code_field">
-                <label for="employee_code" class="form-label">Employee Code</label>
-                <input type="text" name="details[employee_code]" class="form-control" id="employee_code"
-                    value="<?= htmlspecialchars($user->details['employee_code'] ?? '') ?>">
-            </div>
+                    <!-- Role -->
+                    <div class="col-md-3">
+                        <label for="role_id" class="form-label fw-semibold">Role</label>
+                        <select name="role_id" id="role_id" class="form-select" required>
+                            <option value="1" <?= $user->role_id == 1 ? 'selected' : '' ?>>Employee</option>
+                            <option value="2" <?= $user->role_id == 2 ? 'selected' : '' ?>>Manager</option>
+                        </select>
+                    </div>
 
-            <div class="col-md-3">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" name="first_name" class="form-control" id="first_name" value="<?= htmlspecialchars($user->first_name) ?>" required>
-            </div>
+                    <!-- Username -->
+                    <div class="col-md-3">
+                        <label for="username" class="form-label fw-semibold">Username</label>
+                        <input type="text" name="username" class="form-control" id="username"
+                            value="<?= htmlspecialchars($user->username) ?>" required>
+                    </div>
 
-            <div class="col-md-3">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" name="last_name" class="form-control" id="last_name" value="<?= htmlspecialchars($user->last_name) ?>" required>
-            </div>
+                    <!-- Employee Code -->
+                    <div class="col-md-3" id="employee_code_field">
+                        <label for="employee_code" class="form-label fw-semibold">Employee Code</label>
+                        <input type="text" name="details[employee_code]" class="form-control" id="employee_code"
+                            value="<?= htmlspecialchars($user->details['employee_code'] ?? '') ?>">
+                    </div>
 
-            <div class="col-md-4">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user->email) ?>" required>
-            </div>
+                    <!-- First Name -->
+                    <div class="col-md-3">
+                        <label for="first_name" class="form-label fw-semibold">First Name</label>
+                        <input type="text" name="first_name" class="form-control" id="first_name"
+                            value="<?= htmlspecialchars($user->first_name) ?>" required>
+                    </div>
 
-            <div class="col-md-4">
-                <label for="password" class="form-label">Password (leave blank to keep current)</label>
-                <input type="password" name="password" class="form-control" id="password">
-            </div>
+                    <!-- Last Name -->
+                    <div class="col-md-3">
+                        <label for="last_name" class="form-label fw-semibold">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" id="last_name"
+                            value="<?= htmlspecialchars($user->last_name) ?>" required>
+                    </div>
 
-            <div class="col-12 mt-3">
-                <button type="submit" class="btn btn-primary">Update User</button>
-                <a href="/manager/home" class="btn btn-secondary">Cancel</a>
+                    <!-- Email -->
+                    <div class="col-md-4">
+                        <label for="email" class="form-label fw-semibold">Email</label>
+                        <input type="email" name="email" class="form-control" id="email"
+                            value="<?= htmlspecialchars($user->email) ?>" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-4">
+                        <label for="password" class="form-label fw-semibold">Password <small class="text-muted">(leave blank to keep current)</small></label>
+                        <input type="password" name="password" class="form-control" id="password">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                        <a href="/manager/home" class="btn btn-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">💾 Save Changes</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+
     </div>
+
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <small>&copy; <?= date('Y') ?> Vacation Portal. All rights reserved.</small>
+    </footer>
 
     <script>
         const roleSelect = document.getElementById('role_id');
@@ -96,12 +137,11 @@ $success = SessionFlash::get('success');
             }
         }
 
-        // Initialize on load
         toggleEmployeeCode();
-
-        // Listen for changes
         roleSelect.addEventListener('change', toggleEmployeeCode);
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
