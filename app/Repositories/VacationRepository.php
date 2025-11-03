@@ -61,8 +61,8 @@ class VacationRepository
     public function create(array $data): bool
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO vacation_requests (user_id, start_date, end_date, reason, status, created_at)
-            VALUES (:user_id, :start_date, :end_date, :reason, :status, :created_at)
+            INSERT INTO vacation_requests (user_id, start_date, end_date, reason, status_id, created_at)
+            VALUES (:user_id, :start_date, :end_date, :reason, :status_id, :created_at)
         ");
         return $stmt->execute($data);
     }

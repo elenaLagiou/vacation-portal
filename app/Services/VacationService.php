@@ -44,7 +44,7 @@ class VacationService
             'start_date'  => $data['start_date'],
             'end_date'    => $data['end_date'],
             'reason'      => $data['reason'] ?? '',
-            'status'      => 'pending',
+            'status_id'      => 1, // 1 = pending
             'created_at'  => date('Y-m-d H:i:s')
         ]);
     }
