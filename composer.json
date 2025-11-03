@@ -1,0 +1,32 @@
+{
+    "name": "elagiou/vacation-portal",
+    "description": "Employee vacation request portal",
+    "type": "project",
+    "require": {
+        "nikic/fast-route": "^1.3",
+        "symfony/http-foundation": "^7.3",
+        "vlucas/phpdotenv": "^5.6",
+        "spatie/data-transfer-object": "^3.9",
+        "respect/validation": "^2.4",
+        "monolog/monolog": "^3.9",
+        "phpmailer/phpmailer": "^7.0",
+        "symfony/console": "^7.3"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Elagiou\\VacationPortal\\": "app/"
+        },
+         "files": [
+            "app/Helpers/View.php"
+        ]
+    },
+    
+    "authors": [
+        {
+            "name": "Eleni Konstantina Lagiou",
+            "email": "elena.lagiou.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
