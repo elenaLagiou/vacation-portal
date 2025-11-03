@@ -165,7 +165,7 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
             'POST',
             '/request/create',
             fn() =>
-            Middleware::handle([$employeeController, 'create'], [
+            Middleware::handle(fn() => $employeeController->create($_POST), [
                 $authMiddleware->handle(...),
                 $authMiddleware->employeeOnly(...)
             ])

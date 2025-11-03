@@ -61,7 +61,8 @@ class EmployeeController
         }
 
         $user = $this->authService->currentUser();
-        $this->vacationService->createRequest($user['id'], $post);
+        $post['user_id'] = $user['id'];
+        $this->vacationService->createVacationRequest($post);
         header('Location: /employee/home');
         exit;
     }
