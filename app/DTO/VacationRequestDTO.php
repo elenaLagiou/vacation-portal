@@ -13,6 +13,7 @@ class VacationRequestDTO
     public string $end_date;
     public int $status_id; // store the ID
     public string $status_name; // optional, for display
+    public string $created_at;
 
     public function __construct(array $data)
     {
@@ -25,5 +26,6 @@ class VacationRequestDTO
         $this->end_date = $data['end_date'] ?? '';
         $this->status_id = (int)($data['status_id'] ?? 1);
         $this->status_name = $data['status_name'] ?? 'pending';
+        $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
     }
 }

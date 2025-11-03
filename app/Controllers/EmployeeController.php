@@ -67,22 +67,6 @@ class EmployeeController
         exit;
     }
 
-    /**
-     * Delete a pending request
-     */
-    public function delete(int $id): void
-    {
-        if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 3) {
-            header('Location: /login');
-            exit;
-        }
-
-        $user = $this->authService->currentUser();
-        $this->vacationService->deleteRequest($id, $user['id']);
-        header('Location: /employee/home');
-        exit;
-    }
-
     public function logout(): void
     {
         $this->authService->logout();

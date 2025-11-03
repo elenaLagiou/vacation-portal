@@ -50,9 +50,36 @@ class VacationRepository
      */
     public function getByUserId(int $userId): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM vacation_requests WHERE user_id = :user_id ORDER BY created_at DESC");
+        $stmt = $this->pdo->prepare(
+            "SELECT 
+            vr.id, 
+            vr.user_id, 
+            u.first_name, 
+            u.last_name,
+            vr.start_date, 
+            vr.end_date, 
+            vr.reason, 
+            vr.created_at,
+            vr.status_id,
+            vs.name AS status_name,
+            vr.created_at
+         FROM vacation_requests vr
+         LEFT JOIN users u ON u.id = vr.user_id
+         LEFT JOIN vacation_status vs ON vr.status_id = vs.id
+         WHERE vr.user_id = :user_id
+         ORDER BY vr.created_at DESC"
+        );
+
         $stmt->execute(['user_id' => $userId]);
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $requests = [];
+        foreach ($rows as $row) {
+            $requests[] = new VacationRequestDTO($row);
+        }
+
+        return $requests;
     }
 
     /**
