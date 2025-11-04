@@ -5,16 +5,15 @@ require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/bootstrap.php';
 
 use Symfony\Component\Console\Application;
-
-use Elagiou\VacationPortal\Commands\RunTablesCommand;
-use Elagiou\VacationPortal\Commands\SeedCommand;
-use Elagiou\VacationPortal\Commands\ServeCommand;
+use Elagiou\VacationPortal\Commands\{
+    RunTablesCommand,
+    ServeCommand
+};
 
 $app = new Application('Vacation Portal CLI', '1.0.0');
 
-// Register commands
-$app->add((new RunTablesCommand())->setName('db:migrate'));
-$app->add(new ServeCommand())->setName('serve');
-$app->add((new SeedCommand())->setName('db:seed'));
+// ✅ Set names BEFORE adding them to the Application
+$app->add((new RunTablesCommand())->setName('db'));
+$app->add((new ServeCommand())->setName('serve'));
 
 $app->run();

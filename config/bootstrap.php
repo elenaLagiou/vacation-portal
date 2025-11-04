@@ -4,6 +4,13 @@ use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// Create logs directory if it doesn't exist
+$logsDir = __DIR__ . '/../storage/logs';
+if (!is_dir($logsDir)) {
+    mkdir($logsDir, 0777, true);
+}
+
+
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 $dotenv->required(['DB_CONNECTION', 'DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD']);

@@ -72,3 +72,7 @@ Attempting to verify password: password123
 Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
 Attempting to verify password: password123
 
+[2025-11-04 10:22:32] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
