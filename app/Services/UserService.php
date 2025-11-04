@@ -38,8 +38,24 @@ class UserService
             throw new \InvalidArgumentException("Role ID must be provided.");
         }
 
+        // Log the password before hashing
+        file_put_contents(
+            __DIR__ . '/../../storage/logs/auth.log',
+            date('[Y-m-d H:i:s] ') . "Creating user {$data->username}, password before hash: " . $data->password . PHP_EOL,
+            FILE_APPEND
+        );
+
+        // Always hash the password - it's required in UserCreationDTO
         $data->password = password_hash($data->password, PASSWORD_DEFAULT);
 
+        // Log the hashed password
+        file_put_contents(
+            __DIR__ . '/../../storage/logs/auth.log',
+            date('[Y-m-d H:i:s] ') . "Password after hash: " . $data->password . PHP_EOL,
+            FILE_APPEND
+        );
+
+        // Default role_id to 3 (employee) if not set
         $data->role_id = $data->role_id ?? 3;
 
         $this->userRepo->create($data);

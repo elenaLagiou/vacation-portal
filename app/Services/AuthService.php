@@ -35,7 +35,10 @@ class AuthService
         $passwordValid = password_verify($dto->password, $user->password);
         file_put_contents(
             __DIR__ . '/../../storage/logs/auth.log',
-            date('[Y-m-d H:i:s] ') . "Password verification for user {$dto->username}: " . ($passwordValid ? 'success' : 'failed') . PHP_EOL,
+            date('[Y-m-d H:i:s] ') . "Password verification for user {$dto->username}: " . ($passwordValid ? 'success' : 'failed') . "\n" .
+                "Stored hash: " . $user->password . "\n" .
+                "Attempting to verify password: " . $dto->password . "\n" .
+                PHP_EOL,
             FILE_APPEND
         );
 

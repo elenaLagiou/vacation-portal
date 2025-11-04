@@ -15,50 +15,58 @@ A simple employee vacation request portal built with PHP.
 - Approve or reject vacation requests
 - Create, update, and delete users
 
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+- PHP (>= 8.1)
+- Composer
+- MySQL
+
 ## Installation and Setup
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/elagiou/vacation-portal.git
-   cd vacation-portal
-   ```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/elagiou/vacation-portal.git
+    cd vacation-portal
+    ```
 
-2. **Install dependencies:**
-   ```bash
-   composer install
-   ```
+2.  **Install dependencies:**
+    ```bash
+    composer install
+    ```
 
-3. **Set up your environment:**
-   - Create a `.env` file by copying `.env.example`.
-   - Update the `.env` file with your database credentials.
+3.  **Set up your environment:**
+    - Create a `.env` file by copying `.env.example`:
+      ```bash
+      cp .env.example .env
+      ```
+    - Open the `.env` file and update the database credentials (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) to match your local MySQL setup.
 
-4. **Set up the database:**
-   - Run the migrations to create the necessary tables.
-   ```bash
-   php cli.php migrate
-   ```
-   - Run the seeders to populate the database with initial data.
-   ```bash
-   php cli.php db:seed
-   ```
+4.  **Set up the database:**
+    - Make sure your MySQL server is running.
+    - Create the database you specified in the `.env` file.
+    - Run the migrations and seeders to create the necessary tables and populate them with initial data:
+      ```bash
+      ./cli db:migrate
+      ```
 
 ## Usage
 
 To run the application, use the `serve` command:
 
 ```bash
-php cli.php serve
+./cli serve
 ```
 
 The application will be available at `http://localhost:8080`.
 
 ### Available Commands
 
-| Command         | Description                                       |
-|-----------------|---------------------------------------------------|
-| `php cli.php serve`     | Starts the development server.                    |
-| `php cli.php migrate`   | Runs the database migrations.                     |
-| `php cli.php db:seed`   | Runs the database seeders.                        |
+| Command | Description |
+|---|---|
+| `./cli serve` | Starts the development server. |
+| `./cli db:migrate` | Runs the database migrations and seeders. |
+| `./cli db:seed` | Runs the database seeders. |
 
 ## Main Dependencies
 

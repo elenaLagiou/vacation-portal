@@ -1,3 +1,74 @@
 [2025-11-04 09:23:40] Password verification for user Tester: failed
 [2025-11-04 09:27:20] Password verification for user manager2: success
 [2025-11-04 09:28:53] Password verification for user ttttttt: failed
+[2025-11-04 09:30:34] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 09:32:04] Creating user maria, password before hash: 1234567
+[2025-11-04 09:32:05] Password after hash: $2y$12$vNeiOUbY2U7jRYNqdI/4Xub/m9dmFS1e6jMXTfJAQiRog4nfGAUwK
+[2025-11-04 09:33:40] Creating user MARAKI, password before hash: 1234567
+[2025-11-04 09:33:41] Password after hash: $2y$12$VK2f05m6ACoJl9Bm3Zt9xOWIhf5KaHFR5mNLARLch8V0ALT7Gpv/m
+[2025-11-04 09:33:56] Password verification for user MARAKI: failed
+Stored hash: $2y$12$5uTPLufc0Uojvb.7CagcQOjBx7jvKZcvta7jJEEa7pYcd2.zesxSC
+Attempting to verify password: 1234567
+
+[2025-11-04 09:36:10] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 09:36:40] Creating user mario, password before hash: 1234567
+[2025-11-04 09:36:41] Password after hash: $2y$12$aGKD7j1OogKHCxrZlwCqp.LQ0Tb9/SyyCRDRjmi5WwfzUwcnoyLPK
+[2025-11-04 09:36:52] Login failed: User not found: marios
+[2025-11-04 09:37:21] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 09:37:35] Password verification for user mario: success
+Stored hash: $2y$12$aGKD7j1OogKHCxrZlwCqp.LQ0Tb9/SyyCRDRjmi5WwfzUwcnoyLPK
+Attempting to verify password: 1234567
+
+[2025-11-04 09:41:42] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 09:42:12] Password verification for user mario: success
+Stored hash: $2y$12$aGKD7j1OogKHCxrZlwCqp.LQ0Tb9/SyyCRDRjmi5WwfzUwcnoyLPK
+Attempting to verify password: 1234567
+
+[2025-11-04 09:43:38] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 09:47:05] Creating user tester, password before hash: 1234567
+[2025-11-04 09:47:05] Password after hash: $2y$12$1GiKPQisfh/bqH7aHsWDD.dg1K8YjdlX9dyWwGU4AsK8rHH4CH/0O
+[2025-11-04 09:50:07] Creating user xxxx, password before hash: 1234567
+[2025-11-04 09:50:08] Password after hash: $2y$12$I9GCrS94em2U1zZ6pGftneKTYROUHHmsvJ9TaLtpKGVRTXgkLHEhC
+[2025-11-04 09:53:05] Creating user fsdfsd, password before hash: 111111
+[2025-11-04 09:53:06] Password after hash: $2y$12$0sbADVFIuG7FyFp9oOGJMOHpugXq.Ulds1DZbM8zzLeevG7Fq/Raq
+[2025-11-04 09:54:03] Creating user fsdfsd, password before hash: 111111
+[2025-11-04 09:54:03] Password after hash: $2y$12$nJq4jnyRv6Sxr1.Z79w1TO8ET7r5VX5qa2SaYLnud6CE8qs2Un4kO
+[2025-11-04 09:55:13] Creating user fsdfsd, password before hash: 111111
+[2025-11-04 09:55:13] Password after hash: $2y$12$48uE4O3IrIpf1C5IkLsAfOXhxOHOfpDr55FdGWIE4SBUr.VSj51ty
+[2025-11-04 09:56:21] Creating user EEEEEEE, password before hash: 1111111
+[2025-11-04 09:56:21] Password after hash: $2y$12$0OHneItdRFmOL5VbMaI9NO2loXvFRBBURAh3JPGdFwLa1XCa0tYWy
+[2025-11-04 09:57:03] Creating user EEEEEEE, password before hash: 1111111
+[2025-11-04 09:57:03] Password after hash: $2y$12$Gd67w/yU5od.eRnPm1D63eXuAKyJ.XagLLWA.kkCWx7f3S9uIvVT2
+[2025-11-04 10:00:25] Creating user ANTE, password before hash: 1234567
+[2025-11-04 10:00:25] Password after hash: $2y$12$WYJE5fcs.kjmzAH3NyjlguIVsPtANtC24Yg1LJmpcBlvpdmC5pdPe
+[2025-11-04 10:00:55] Password verification for user ANTEE: success
+Stored hash: $2y$12$WYJE5fcs.kjmzAH3NyjlguIVsPtANtC24Yg1LJmpcBlvpdmC5pdPe
+Attempting to verify password: 1234567
+
+[2025-11-04 10:06:29] Password verification for user employee1: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 10:06:47] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 10:07:08] Password verification for user employee1: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+

@@ -36,7 +36,7 @@ class UserCreationDTO
         v::stringType()->length(6, null)->check($this->password);
         v::arrayType()->check($this->details);
 
-        if ($this->details['employee_code'] !== "") {
+        if (isset($this->details['employee_code']) && $this->details['employee_code'] !== "") {
             v::digit()->length(7, 7)->check($this->details['employee_code']);
         }
     }

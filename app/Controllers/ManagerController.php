@@ -63,6 +63,13 @@ class ManagerController
             $dto = new UserCreationDTO($data);
             $this->userService->createUser($dto);
 
+            // Debug logging to help diagnose redirect problems
+            $logPath = __DIR__ . '/../../storage/logs/create_user.log';
+            $msg = date('[Y-m-d H:i:s] ') . "User created: {$dto->username} \n";
+            $msg .= "headers_sent: " . (headers_sent($file, $line) ? "yes ($file:$line)" : "no") . "\n";
+            $msg .= "output_buffer_level: " . ob_get_level() . "\n";
+            file_put_contents($logPath, $msg, FILE_APPEND);
+
             SessionFlash::set('success', 'User created successfully!');
             header('Location: /manager/home');
             exit();

@@ -14,7 +14,7 @@ $app = new Application('Vacation Portal CLI', '1.0.0');
 
 // Register commands
 $app->add((new RunTablesCommand())->setName('db:migrate'));
-// $app->add(new ServeCommand())->setName('serve');
+$app->add(new ServeCommand())->setName('serve');
 $app->add((new SeedCommand())->setName('db:seed'));
 
 $app->run();

@@ -54,6 +54,20 @@ function old($key, $default = '')
             <div class="alert alert-success shadow-sm rounded"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
+        <script>
+            function toggleEmployeeCode() {
+                const roleSelect = document.getElementById('role_id');
+                const employeeCodeField = document.getElementById('employee_code_field');
+
+                // Show employee code field only when role is Employee (3)
+                if (roleSelect.value === '3') {
+                    employeeCodeField.style.display = 'block';
+                } else {
+                    employeeCodeField.style.display = 'none';
+                }
+            }
+        </script>
+
         <!-- Card -->
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-header bg-white border-bottom py-3">
@@ -66,8 +80,8 @@ function old($key, $default = '')
                     <!-- Role -->
                     <div class="col-md-3">
                         <label for="role_id" class="form-label fw-semibold">Role</label>
-                        <select name="role_id" id="role_id" class="form-select" required>
-                            <option value="1" <?= old('role_id') == '1' ? 'selected' : '' ?>>Employee</option>
+                        <select name="role_id" id="role_id" class="form-select" required onchange="toggleEmployeeCode()">
+                            <option value="3" <?= old('role_id') == '3' ? 'selected' : '' ?>>Employee</option>
                             <option value="2" <?= old('role_id') == '2' ? 'selected' : '' ?>>Manager</option>
                         </select>
                     </div>
@@ -80,7 +94,7 @@ function old($key, $default = '')
                     </div>
 
                     <!-- Employee Code -->
-                    <div class="col-md-3" id="employee_code_field">
+                    <div class="col-md-3" id="employee_code_field" style="display: <?= old('role_id', '3') == '3' ? 'block' : 'none' ?>">
                         <label for="employee_code" class="form-label fw-semibold">Employee Code</label>
                         <input type="text" name="details[employee_code]" class="form-control" id="employee_code"
                             value="<?= old('details.employee_code', '') ?>">
@@ -134,7 +148,7 @@ function old($key, $default = '')
         const employeeCodeInput = document.getElementById('employee_code');
 
         function toggleEmployeeCode() {
-            if (roleSelect.value === '1') { // Employee
+            if (roleSelect.value === '3') {
                 employeeCodeField.style.display = 'block';
                 employeeCodeInput.required = true;
             } else {

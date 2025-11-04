@@ -53,7 +53,7 @@ class UserRepository
             'first_name' => $data->first_name,
             'last_name' => $data->last_name,
             'email' => $data->email,
-            'password' => password_hash($data->password, PASSWORD_DEFAULT),
+            'password' => $data->password, // Password is already hashed in UserService
         ]);
 
         $userId = (int) $this->pdo->lastInsertId();
