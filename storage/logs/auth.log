@@ -80,3 +80,35 @@ Attempting to verify password: password123
 Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
 Attempting to verify password: password123
 
+[2025-11-04 11:18:41] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 11:29:32] Password verification for user vvvvvv: failed
+Stored hash: $2y$12$0sbADVFIuG7FyFp9oOGJMOHpugXq.Ulds1DZbM8zzLeevG7Fq/Raq
+Attempting to verify password: 1234567
+
+[2025-11-04 11:29:47] Password verification for user vvvvvv: failed
+Stored hash: $2y$12$0sbADVFIuG7FyFp9oOGJMOHpugXq.Ulds1DZbM8zzLeevG7Fq/Raq
+Attempting to verify password: 123456
+
+[2025-11-04 11:29:57] Password verification for user manager2: failed
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: 123456
+
+[2025-11-04 11:30:12] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 11:51:19] Password verification for user adadas: success
+Stored hash: $2y$12$WzZaE7HO7UweTSk0zYlsKeP2IJe.SquAw/DAfC4.NUDfTwagTFXHW
+Attempting to verify password: 1234567
+
+[2025-11-04 11:51:52] Password verification for user manager2: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+
+[2025-11-04 11:57:02] Password verification for user employee1: success
+Stored hash: $2y$12$opZJaJp/5e9Pba5AGrlrcum3m6n0wrS4boJLNHV3T6vpbd43iB/W2
+Attempting to verify password: password123
+

@@ -22,8 +22,7 @@ class ManagerController
         protected AuthService $authService,
         protected UserService $userService,
         protected VacationService $vacationService
-    ) {
-    }
+    ) {}
 
     /**
      * @return void
@@ -74,15 +73,16 @@ class ManagerController
         try {
             $dto = new UserCreationDTO($data);
             $this->userService->createUser($dto);
-
             SessionFlash::set('success', 'User created successfully!');
             header('Location: /manager/home');
             exit();
         } catch (ValidationException $ve) {
+            print_r($ve->getMessage());
             SessionFlash::set('errors', [$ve->getMessage()]);
             header('Location: /manager/create-user');
             exit();
         } catch (\Throwable $e) {
+            print_r($e->getMessage());
             SessionFlash::set('error', ['Failed to create user: ' . $e->getMessage()]);
             header('Location: /manager/create-user');
             exit();
