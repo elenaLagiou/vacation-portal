@@ -36,15 +36,12 @@ class UserRepository
         } else {
             $row['details'] = null;
         }
-        var_dump($row);
-
         return $row;
     }
 
 
     public function create(UserCreationDTO $data): User
     {
-        // 1️⃣ Insert into users table
         $stmt = $this->pdo->prepare("
         INSERT INTO users (role_id, username,first_name, last_name, email, password)
         VALUES (:role_id,:username, :first_name, :last_name, :email, :password)
@@ -92,7 +89,9 @@ class UserRepository
             // ✅ Update main user info
             $sql = "
                 UPDATE users
-                SET first_name = :first_name,
+                SET username = :username,
+                    role_id = :role_id,
+                    first_name = :first_name,
                     last_name = :last_name,
                     email = :email
                 " . ($dto->password ? ", password = :password" : "") . "
@@ -100,6 +99,8 @@ class UserRepository
             ";
 
             $params = [
+                'username'   => $dto->username,
+                'role_id'   => $dto->role_id,
                 'first_name' => $dto->first_name,
                 'last_name'  => $dto->last_name,
                 'email'      => $dto->email,

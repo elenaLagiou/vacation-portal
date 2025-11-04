@@ -100,7 +100,7 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
             '/delete-user',
             fn() =>
             Middleware::handle(
-                [$managerController, 'deleteUser'],
+                fn() => $managerController->deleteUser($_POST),
                 [$authMiddleware->handle(...), $authMiddleware->managerOnly(...)]
             )
         );
