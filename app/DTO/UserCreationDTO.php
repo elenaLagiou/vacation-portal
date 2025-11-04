@@ -21,7 +21,7 @@ class UserCreationDTO
         $this->last_name = trim($data['last_name']);
         $this->email = trim($data['email']);
         $this->password = $data['password'];
-        $this->role_id = (int)($data['role_id'] ?? 3); // default employee
+        $this->role_id = (int)($data['role_id'] ?? 3);
         $this->details = $data['details'] ?? [];
 
         $this->validate();
@@ -36,8 +36,7 @@ class UserCreationDTO
         v::stringType()->length(6, null)->check($this->password);
         v::arrayType()->check($this->details);
 
-        // ✅ Validate employee_code if it exists in details
-        if (isset($this->details['employee_code'])) {
+        if ($this->details['employee_code'] !== "") {
             v::digit()->length(7, 7)->check($this->details['employee_code']);
         }
     }

@@ -60,10 +60,10 @@ class VacationService
     /**
      * Delete a vacation request (for employees)
      */
-    public function deleteVacationRequest(int $id, int $userId): bool
+    public function delete(int $id, int $userId): bool
     {
         $request = $this->vacationRepository->findById($id);
-        if (!$request || $request['user_id'] !== $userId || $request['status'] !== 'pending') {
+        if (!$request || (int)$request['user_id'] !== $userId || (int)($request['status_id'] ?? 0) !== 1) {
             throw new \RuntimeException("Cannot delete this vacation request");
         }
 

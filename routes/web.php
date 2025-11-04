@@ -69,7 +69,7 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
             '/create-user',
             fn() =>
             Middleware::handle(
-                fn() => $managerController->createUser($_POST), // ✅ pass $_POST here
+                fn() => $managerController->createUser($_POST),
                 [
                     $authMiddleware->handle(...),
                     $authMiddleware->managerOnly(...)
@@ -135,16 +135,6 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
                 $authMiddleware->managerOnly(...)
             ], [$id])
         );
-
-        $r->addRoute(
-            'POST',
-            '/request/delete/{id:\d+}',
-            fn($id) =>
-            Middleware::handle([$managerController, 'deleteRequest'], [
-                $authMiddleware->handle(...),
-                $authMiddleware->managerOnly(...)
-            ], [$id])
-        );
     });
 
     // EMPLOYEE ROUTES
@@ -172,7 +162,6 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
             ])
         );
 
-        // Create new vacation request
         $r->addRoute(
             'GET',
             '/request/create',
@@ -198,7 +187,7 @@ return simpleDispatcher(function (RouteCollector $r) use ($managerController, $e
             'POST',
             '/request/delete/{id}',
             fn($id) =>
-            Middleware::handle([$employeeController, 'delete'], [
+            Middleware::handle([$employeeController, 'deleteRequest'], [
                 $authMiddleware->handle(...),
                 $authMiddleware->employeeOnly(...)
             ], [$id])

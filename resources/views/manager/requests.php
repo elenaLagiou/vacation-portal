@@ -80,10 +80,6 @@ $success = SessionFlash::get('success');
                                             ✗ Reject
                                         </button>
                                     <?php endif; ?>
-                                    <form method="POST" action="/manager/request/delete/<?= $request->id ?>" class="d-inline"
-                                        onsubmit="return confirm('Are you sure you want to delete this request?')">
-                                        <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

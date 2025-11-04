@@ -4,6 +4,7 @@ namespace Elagiou\VacationPortal\Controllers;
 
 use Elagiou\VacationPortal\Services\AuthService;
 use Elagiou\VacationPortal\Services\VacationService;
+use Elagiou\VacationPortal\Helpers\SessionFlash;
 
 use function Elagiou\VacationPortal\Helpers\view;
 
@@ -71,10 +72,26 @@ class EmployeeController
         exit;
     }
 
-    public function logout(): void
+    /**
+     * Delete a vacation request (employee)
+     */
+    public function deleteRequest(int $id): void
     {
-        $this->authService->logout();
-        header('Location: /login');
+        if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 3) {
+            header('Location: /login');
+            exit;
+        }
+
+        $user = $this->authService->currentUser();
+
+        try {
+            $this->vacationService->delete($id, $user['id']);
+            SessionFlash::set('success', 'Vacation request deleted successfully.');
+        } catch (\Throwable $e) {
+            SessionFlash::set('errors', ['Failed to delete request: ' . $e->getMessage()]);
+        }
+
+        header('Location: /employee/home');
         exit;
     }
 }
