@@ -83,7 +83,7 @@ $success = SessionFlash::get('success');
                     <td><?= ucfirst($r->status_name) ?></td>
                     <td>
                       <?php if ($r->status_name === 'pending'): ?>
-                        <form action="/employee/delete/<?= $r->id ?>" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this request?');">
+                        <form action="/employee/request/delete/<?= $r->id ?>" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this request?');">
                           <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
                       <?php else: ?>
