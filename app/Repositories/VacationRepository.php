@@ -25,7 +25,8 @@ class VacationRepository
             vr.start_date,
             vr.end_date,
             vr.reason,
-            vs.name AS status, 
+            vs.name AS status_name,
+            vs.id AS status_id, 
             vr.created_at,
             vr.updated_at,
             u.first_name,
@@ -40,7 +41,6 @@ class VacationRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
         return array_map(fn($row) => new VacationRequestDTO($row), $rows);
     }
 
@@ -113,12 +113,12 @@ class VacationRepository
         // 1. Find the corresponding status_id by its name
         $stmt = $this->pdo->prepare("SELECT id FROM vacation_status WHERE name = :name LIMIT 1");
         $stmt->execute(['name' => $name]);
-        $status = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (!$status || !isset($status['id'])) {
-            throw new \RuntimeException("Invalid status name: {$name}");
-        }
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $status_id = $result['id'] ?? null;
 
-        $status_id = (int) $status['id'];
+        if (!$status_id) {
+            return false;
+        }
 
         // 2. Update the vacation request record
         $stmt = $this->pdo->prepare("UPDATE vacation_requests SET status_id = :status_id WHERE id = :id");

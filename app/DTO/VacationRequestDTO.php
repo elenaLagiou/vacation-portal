@@ -11,8 +11,8 @@ class VacationRequestDTO
     public string $start_date;
     public string $reason;
     public string $end_date;
-    public int $status_id; // store the ID
-    public string $status_name; // optional, for display
+    public int $status_id;
+    public string $status_name;
     public string $created_at;
 
     public function __construct(array $data)

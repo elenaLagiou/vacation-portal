@@ -2,11 +2,8 @@
 
 use Elagiou\VacationPortal\Helpers\SessionFlash;
 
-// Flash messages
 $errors = SessionFlash::get('errors', []);
 $success = SessionFlash::get('success');
-
-// $requests: array of VacationRequestDTO
 ?>
 
 <!DOCTYPE html>
@@ -62,20 +59,30 @@ $success = SessionFlash::get('success');
                             <td><?= htmlspecialchars($request->reason) ?></td>
                             <td><?= htmlspecialchars($request->start_date) ?></td>
                             <td><?= htmlspecialchars($request->end_date) ?></td>
-                            <td><?= htmlspecialchars($request->status_name) ?></td>
+                            <td>
+                                <span class="badge <?= $request->status_name === 'approved' ? 'bg-success' : ($request->status_name === 'rejected' ? 'bg-warning' : 'bg-secondary') ?>">
+                                    <?= ucfirst(htmlspecialchars($request->status_name)) ?>
+                                </span>
+                            </td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <form method="POST" action="/manager/request/approve/<?= $request->id ?>" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                                    </form>
-
-                                    <form method="POST" action="/manager/request/reject/<?= $request->id ?>" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-warning">Reject</button>
-                                    </form>
-
+                                    <?php if ($request->status_name === 'pending'): ?>
+                                        <button type="button"
+                                            class="btn btn-sm btn-success action-btn"
+                                            data-action="approve"
+                                            data-request-id="<?= $request->id ?>">
+                                            ✓ Approve
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm btn-warning action-btn"
+                                            data-action="reject"
+                                            data-request-id="<?= $request->id ?>">
+                                            ✗ Reject
+                                        </button>
+                                    <?php endif; ?>
                                     <form method="POST" action="/manager/request/delete/<?= $request->id ?>" class="d-inline"
                                         onsubmit="return confirm('Are you sure you want to delete this request?')">
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
                                     </form>
                                 </div>
                             </td>
@@ -90,36 +97,48 @@ $success = SessionFlash::get('success');
         </table>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const actionForms = document.querySelectorAll('form[action*="/request/approve/"], form[action*="/request/reject/"]');
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionButtons = document.querySelectorAll('.action-btn');
 
-            actionForms.forEach(form => {
-                form.addEventListener('submit', function (event) {
-                    event.preventDefault();
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const requestId = this.dataset.requestId;
+                    const action = this.dataset.action;
+                    const url = `/manager/request/${action}/${requestId}`;
+                    const isApprove = action === 'approve';
 
-                    const action = this.action;
-                    const isApprove = action.includes('approve');
-
-                    fetch(action, {
-                        method: 'POST'
-                    })
-                    .then(response => {
-                        if (response.ok) {
+                    fetch(url, {
+                            method: 'POST'
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to ${isApprove ? 'approve' : 'reject'} request.`);
+                            }
                             return response.json();
-                        }
-                        throw new Error(`Failed to ${isApprove ? 'approve' : 'reject'} request.`);
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        window.location.reload();
-                    })
-                    .catch(error => {
-                        alert(error.message);
-                    });
+                        })
+                        .then(data => {
+                            // ✅ Update the status badge
+                            const row = this.closest('tr');
+                            const statusCell = row.querySelector('td:nth-child(6) span');
+                            const actionsCell = row.querySelector('td:nth-child(7) .d-flex');
+
+                            statusCell.textContent = isApprove ? 'Approved' : 'Rejected';
+                            statusCell.className = 'badge ' + (isApprove ? 'bg-success' : 'bg-warning');
+
+                            // ✅ Remove approve/reject buttons (since it's no longer pending)
+                            actionsCell.querySelectorAll('.action-btn').forEach(btn => btn.remove());
+
+                            // ✅ Optional: show toast / alert
+                            alert(data.message);
+                        })
+                        .catch(error => {
+                            alert(error.message);
+                        });
                 });
             });
         });
     </script>
+
 </body>
 
 </html>
