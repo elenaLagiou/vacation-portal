@@ -38,6 +38,7 @@ $authMiddleware = new AuthMiddleware($authService);
 return simpleDispatcher(function (RouteCollector $r) use ($managerController, $employeeController, $authController, $authMiddleware) {
 
     //  AUTH ROUTES
+    $r->addRoute('GET', '/', [$authController, 'showWelcomePage']);
     $r->addRoute('GET', '/login', [$authController, 'showLoginForm']);
     $r->addRoute('POST', '/login', fn() => $authController->login($_POST));
     $r->addRoute('GET', '/logout', [$authController, 'logout']);

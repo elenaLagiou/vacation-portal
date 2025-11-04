@@ -17,6 +17,16 @@ class AuthController
     ) {}
 
     /**
+     * Show welcome page
+     *
+     * @return void
+     */
+    public function showWelcomePage(): void
+    {
+        view('welcome');
+    }
+
+    /**
      * Show login page
      *
      * @return void
