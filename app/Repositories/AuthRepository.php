@@ -21,7 +21,6 @@ class AuthRepository
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->execute(['username' => $username]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
-
         return $data ? new User($data) : null;
     }
 }

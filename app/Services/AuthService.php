@@ -23,9 +23,23 @@ class AuthService
     public function login(LoginDTO $dto): ?array
     {
         $user = $this->repository->getByUsername($dto->username);
-        if (!$user) return null;
+        if (!$user) {
+            file_put_contents(
+                __DIR__ . '/../../storage/logs/auth.log',
+                date('[Y-m-d H:i:s] ') . "Login failed: User not found: " . $dto->username . PHP_EOL,
+                FILE_APPEND
+            );
+            return null;
+        }
 
-        if (password_verify($dto->password, $user->password)) {
+        $passwordValid = password_verify($dto->password, $user->password);
+        file_put_contents(
+            __DIR__ . '/../../storage/logs/auth.log',
+            date('[Y-m-d H:i:s] ') . "Password verification for user {$dto->username}: " . ($passwordValid ? 'success' : 'failed') . PHP_EOL,
+            FILE_APPEND
+        );
+
+        if ($passwordValid) {
             if (session_status() === PHP_SESSION_NONE) session_start();
 
             $_SESSION['user'] = [
