@@ -65,8 +65,7 @@ The application will be available at `http://localhost:8080`.
 | Command | Description |
 |---|---|
 | `./cli serve` | Starts the development server. |
-| `./cli db:migrate` | Runs the database migrations and seeders. |
-| `./cli db:seed` | Runs the database seeders. |
+| `./cli db` | Runs the database migrations and seeders. |
 
 ## Main Dependencies
 

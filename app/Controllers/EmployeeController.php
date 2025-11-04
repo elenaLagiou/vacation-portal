@@ -10,17 +10,20 @@ use function Elagiou\VacationPortal\Helpers\view;
 
 class EmployeeController
 {
-    private AuthService $authService;
-    private VacationService $vacationService;
-
-    public function __construct(AuthService $authService, VacationService $vacationService)
-    {
-        $this->authService = $authService;
-        $this->vacationService = $vacationService;
+    /**
+     * @param AuthService $authService
+     * @param VacationService $vacationService
+     */
+    public function __construct(
+        protected AuthService $authService,
+        protected VacationService $vacationService
+    ) {
     }
 
     /**
      * Employee home page
+     *
+     * @return void
      */
     public function home(): void
     {
@@ -40,6 +43,8 @@ class EmployeeController
 
     /**
      * Show vacation creation form
+     *
+     * @return void
      */
     public function createForm(): void
     {
@@ -57,6 +62,9 @@ class EmployeeController
 
     /**
      * Handle vacation request creation
+     *
+     * @param array $post
+     * @return void
      */
     public function create(array $post): void
     {
@@ -74,6 +82,9 @@ class EmployeeController
 
     /**
      * Delete a vacation request (employee)
+     *
+     * @param int $id
+     * @return void
      */
     public function deleteRequest(int $id): void
     {

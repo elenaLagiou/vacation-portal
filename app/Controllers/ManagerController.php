@@ -4,7 +4,6 @@ namespace Elagiou\VacationPortal\Controllers;
 
 use Elagiou\VacationPortal\Services\AuthService;
 use Elagiou\VacationPortal\Services\UserService;
-use Elagiou\VacationPortal\DTO\LoginDTO;
 use Elagiou\VacationPortal\DTO\UserCreationDTO;
 use Elagiou\VacationPortal\Helpers\SessionFlash;
 use Elagiou\VacationPortal\Services\VacationService;
@@ -14,13 +13,21 @@ use function Elagiou\VacationPortal\Helpers\view;
 
 class ManagerController
 {
-
+    /**
+     * @param AuthService $authService
+     * @param UserService $userService
+     * @param VacationService $vacationService
+     */
     public function __construct(
         protected AuthService $authService,
         protected UserService $userService,
         protected VacationService $vacationService
-    ) {}
+    ) {
+    }
 
+    /**
+     * @return void
+     */
     public function showCreateUserForm(): void
     {
         if (!$this->authService->check() || $this->authService->currentUser()['role_id'] != 2) {
@@ -37,6 +44,8 @@ class ManagerController
 
     /**
      * Manager home page
+     *
+     * @return void
      */
     public function home(): void
     {
@@ -56,6 +65,9 @@ class ManagerController
 
     /**
      * Create a new user
+     *
+     * @param array $data
+     * @return void
      */
     public function createUser(array $data): void
     {
@@ -76,6 +88,10 @@ class ManagerController
             exit();
         }
     }
+
+    /**
+     * @return void
+     */
     public function showUpdateUserForm(): void
     {
         $id = (int)($_GET['id'] ?? 0);
@@ -95,6 +111,10 @@ class ManagerController
         view('manager.update_user', ['user' => $user]);
     }
 
+    /**
+     * @param array $data
+     * @return void
+     */
     public function updateUser(array $data): void
     {
         try {
@@ -109,6 +129,10 @@ class ManagerController
         }
     }
 
+    /**
+     * @param array $data
+     * @return void
+     */
     public function deleteUser(array $data): void
     {
         try {
@@ -124,6 +148,8 @@ class ManagerController
 
     /**
      * Logout
+     *
+     * @return void
      */
     public function logout(): void
     {
@@ -131,8 +157,11 @@ class ManagerController
         header('Location: /login');
         exit();
     }
+
     /**
      * List all vacation requests
+     *
+     * @return void
      */
     public function listRequests(): void
     {
@@ -148,6 +177,9 @@ class ManagerController
 
     /**
      * Approve a vacation request
+     *
+     * @param int $id
+     * @return void
      */
     public function approveRequest(int $id): void
     {
@@ -159,6 +191,9 @@ class ManagerController
 
     /**
      * Reject a vacation request
+     *
+     * @param int $id
+     * @return void
      */
     public function rejectRequest(int $id): void
     {

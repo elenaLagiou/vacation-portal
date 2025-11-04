@@ -9,12 +9,17 @@ use function Elagiou\VacationPortal\Helpers\view;
 
 class AuthController
 {
+    /**
+     * @param AuthService $authService
+     */
     public function __construct(
         protected AuthService $authService
     ) {}
 
     /**
      * Show login page
+     *
+     * @return void
      */
     public function showLoginForm(): void
     {
@@ -24,6 +29,9 @@ class AuthController
 
     /**
      * Handle login form submission
+     *
+     * @param array $data
+     * @return void
      */
     public function login(array $data): void
     {
@@ -53,6 +61,8 @@ class AuthController
 
     /**
      * Logout
+     *
+     * @return void
      */
     public function logout(): void
     {
