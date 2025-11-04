@@ -11,6 +11,8 @@ class User
     public int $role_id;
     public string $first_name;
     public string $last_name;
+    // Additional arbitrary details stored in `user_details.details` (decoded JSON)
+    public array $details = [];
 
     public function __construct(array $data)
     {

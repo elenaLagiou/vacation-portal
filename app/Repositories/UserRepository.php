@@ -3,6 +3,7 @@
 namespace Elagiou\VacationPortal\Repositories;
 
 use Elagiou\VacationPortal\DTO\UserCreationDTO;
+use Elagiou\VacationPortal\DTO\UserUpdateDTO;
 use Elagiou\VacationPortal\Models\User;
 
 class UserRepository
@@ -16,13 +17,30 @@ class UserRepository
         return array_map(fn($r) => new User($r), $rows);
     }
 
-    public function findById(int $id): ?User
+    public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt = $this->pdo->prepare("
+            SELECT u.*, ud.details AS details
+            FROM users u
+            LEFT JOIN user_details ud ON ud.user_id = u.id
+            WHERE u.id = :id
+        ");
         $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch();
-        return $row ? new User($row) : null;
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) return null;
+
+        if (!empty($row['details'])) {
+            $decoded = json_decode($row['details'], true);
+            $row['details'] = is_array($decoded) ? $decoded : null;
+        } else {
+            $row['details'] = null;
+        }
+        var_dump($row);
+
+        return $row;
     }
+
 
     public function create(UserCreationDTO $data): User
     {
@@ -66,41 +84,68 @@ class UserRepository
 
 
 
-    public function update(array $data): bool
+    public function update(UserUpdateDTO $dto): void
     {
-        $fields = [
-            'username'   => $data['username'] ?? null,
-            'first_name' => $data['first_name'] ?? null,
-            'last_name'  => $data['last_name'] ?? null,
-            'email'      => $data['email'] ?? null,
-        ];
+        $this->pdo->beginTransaction();
 
-        if (!empty($data['password'])) {
-            $fields['password'] = $data['password']; // already hashed
+        try {
+            // ✅ Update main user info
+            $sql = "
+                UPDATE users
+                SET first_name = :first_name,
+                    last_name = :last_name,
+                    email = :email
+                " . ($dto->password ? ", password = :password" : "") . "
+                WHERE id = :id
+            ";
+
+            $params = [
+                'first_name' => $dto->first_name,
+                'last_name'  => $dto->last_name,
+                'email'      => $dto->email,
+                'id'         => $dto->id,
+            ];
+
+            if ($dto->password) {
+                $params['password'] = $dto->password;
+            }
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($params);
+
+            // ✅ Update or delete details
+            if (is_null($dto->details)) {
+                $delete = $this->pdo->prepare("DELETE FROM user_details WHERE user_id = :id");
+                $delete->execute(['id' => $dto->id]);
+            } else {
+                $json = json_encode($dto->details);
+                $exists = $this->pdo
+                    ->prepare("SELECT user_id FROM user_details WHERE user_id = :id")
+                    ->execute(['id' => $dto->id]);
+
+                $checkStmt = $this->pdo->prepare("SELECT COUNT(*) FROM user_details WHERE user_id = :id");
+                $checkStmt->execute(['id' => $dto->id]);
+                $hasDetails = (bool)$checkStmt->fetchColumn();
+
+                if ($hasDetails) {
+                    $update = $this->pdo->prepare("
+                        UPDATE user_details SET details = :details WHERE user_id = :id
+                    ");
+                    $update->execute(['details' => $json, 'id' => $dto->id]);
+                } else {
+                    $insert = $this->pdo->prepare("
+                        INSERT INTO user_details (user_id, details)
+                        VALUES (:id, :details)
+                    ");
+                    $insert->execute(['id' => $dto->id, 'details' => $json]);
+                }
+            }
+
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
         }
-
-        $fields = array_filter($fields, fn($v) => $v !== null && $v !== '');
-
-        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
-
-        $fields['id'] = $data['id'];
-
-        $stmt = $this->pdo->prepare("UPDATE users SET $set WHERE id = :id");
-        $updated = $stmt->execute($fields);
-
-        if (isset($data['details']) && is_array($data['details'])) {
-            $stmt2 = $this->pdo->prepare("
-            INSERT INTO user_details (user_id, details)
-            VALUES (:user_id, :details)
-            ON DUPLICATE KEY UPDATE details = :details
-        ");
-            $stmt2->execute([
-                'user_id' => $data['id'],
-                'details' => json_encode($data['details']),
-            ]);
-        }
-
-        return $updated;
     }
 
 

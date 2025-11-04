@@ -87,7 +87,7 @@ class ManagerController
 
         $user = $this->userService->getUserById($id);
         if (!$user) {
-            SessionFlash::set('error', ['User not found.']);
+            SessionFlash::set('errors', ['User not found.']);
             header('Location: /manager/home');
             exit();
         }

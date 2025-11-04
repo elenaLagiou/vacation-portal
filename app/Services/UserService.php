@@ -3,6 +3,7 @@
 namespace Elagiou\VacationPortal\Services;
 
 use Elagiou\VacationPortal\DTO\UserCreationDTO;
+use Elagiou\VacationPortal\DTO\UserUpdateDTO;
 use Elagiou\VacationPortal\Models\User;
 use Elagiou\VacationPortal\Repositories\UserRepository;
 
@@ -47,17 +48,31 @@ class UserService
         $this->userRepo->create($data);
     }
 
-    /**
-     * Find a user by ID
-     */
-    public function getUserById(int $id)
+    public function getUserById(int $id): ?UserUpdateDTO
     {
-        return $this->userRepo->findById($id);
+        $data = $this->userRepo->findById($id);
+        return $data ? new UserUpdateDTO($data) : null;
     }
     public function updateUser(array $data): void
     {
-        $this->userRepo->update($data);
+        // ✅ Hash password if provided
+        if (!empty($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        // ✅ Decode JSON string for details if needed
+        if (isset($data['details']) && is_string($data['details'])) {
+            $decoded = json_decode($data['details'], true);
+            $data['details'] = is_array($decoded) ? $decoded : null;
+        }
+
+        // ✅ Build DTO with validation
+        $dto = new UserUpdateDTO($data);
+
+        // ✅ Delegate to repository
+        $this->userRepo->update($dto);
     }
+
 
     public function deleteUser(int $id): void
     {
